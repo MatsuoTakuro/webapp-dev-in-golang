@@ -9,7 +9,8 @@ import (
 func Sub() {
 	// list_2_3()
 	// list_2_5()
-	list_2_6()
+	// list_2_6()
+	list_2_7()
 }
 
 func list_2_3() {
@@ -64,4 +65,28 @@ func list_2_6() {
 
 	cancel()
 	time.Sleep(time.Second)
+}
+
+type TraceID string
+
+const ZeroTraceID = ""
+
+type traceIDKey struct{}
+
+func SetTraceID(ctx context.Context, tid TraceID) context.Context {
+	return context.WithValue(ctx, traceIDKey{}, tid)
+}
+
+func GetTraceID(ctx context.Context) TraceID {
+	if v, ok := ctx.Value(traceIDKey{}).(TraceID); ok {
+		return v
+	}
+	return ZeroTraceID
+}　
+
+func list_2_7() {
+	ctx := context.Background()
+	fmt.Printf("trace id = %q\n", GetTraceID(ctx))
+	ctx = SetTraceID(ctx, "test-id")
+	fmt.Printf("trace id = %q\n", GetTraceID(ctx))
 }
