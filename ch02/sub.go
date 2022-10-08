@@ -82,7 +82,7 @@ func GetTraceID(ctx context.Context) TraceID {
 		return v
 	}
 	return ZeroTraceID
-}　
+}
 
 func list_2_7() {
 	ctx := context.Background()
