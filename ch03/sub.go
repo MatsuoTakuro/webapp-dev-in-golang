@@ -9,8 +9,8 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-var db *sql.DB
-var dbErr error
+var Db *sql.DB
+var DbErr error
 
 type Repository struct {
 	db *sql.DB
@@ -18,10 +18,10 @@ type Repository struct {
 
 var configValues string = "host=localhost port=5432 user=testuser dbname=testdb password=pass sslmode=disable"
 
-func connectToPgx() {
-	db, dbErr = sql.Open("pgx", configValues)
-	if nil != dbErr {
-		log.Fatal("error when opening db", dbErr)
+func ConnectToPgx() {
+	Db, DbErr = sql.Open("pgx", configValues)
+	if nil != DbErr {
+		log.Fatal("error when opening db", DbErr)
 	}
 }
 func createUsersTable() {
@@ -31,7 +31,7 @@ func createUsersTable() {
 		created_at timestamp with time zone,
 		CONSTRAINT pk_users PRIMARY KEY (user_id)
 	)`
-	_, err := db.Exec(cmdU)
+	_, err := Db.Exec(cmdU)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,7 +39,7 @@ func createUsersTable() {
 
 func initializeUsersTable() {
 	cmd := `TRUNCATE users;`
-	_, err := db.Exec(cmd)
+	_, err := Db.Exec(cmd)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +51,7 @@ func initializeUsersTable() {
 	)
 	VALUES('0001', 'Gopher', '2020-07-10 00:00:00.000000+00'),
 				('0002', 'Ferris', '2020-07-11 00:00:00.000000+00')`
-	_, err = db.Exec(cmd)
+	_, err = Db.Exec(cmd)
 	if err != nil {
 		log.Println(err)
 	}
@@ -64,7 +64,7 @@ func createProductsTable() {
 		price integer NOT NULL,
 		CONSTRAINT pk_products PRIMARY KEY (product_no)
 	)`
-	_, err := db.Exec(cmdU)
+	_, err := Db.Exec(cmdU)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,7 +72,7 @@ func createProductsTable() {
 
 func initializeProductsTable() {
 	cmd := `TRUNCATE products;`
-	_, err := db.Exec(cmd)
+	_, err := Db.Exec(cmd)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,14 +84,14 @@ func initializeProductsTable() {
 	)
 	VALUES(1, 'X', 1000),
 				(2, 'Y', 2000)`
-	_, err = db.Exec(cmd)
+	_, err = Db.Exec(cmd)
 	if err != nil {
 		log.Println(err)
 	}
 }
 
 func init() {
-	connectToPgx()
+	ConnectToPgx()
 	createUsersTable()
 	initializeUsersTable()
 	createProductsTable()
@@ -105,7 +105,7 @@ func Sub() {
 func list_3_3() {
 	ctx := context.Background()
 	r := Repository{
-		db: db,
+		db: Db,
 	}
 	err := r.Update(ctx)
 	if err != nil {
