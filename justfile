@@ -20,3 +20,9 @@ stop-db:
 
 db-in:
   docker exec -it my-postgres bash -c "psql testdb -U testuser"
+
+create-mysql:
+  docker run -d --name my-mysql --platform=linux/x86_64 -e MYSQL_USER=testuser -e MYSQL_PASSWORD=pass -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=testdb -h localhost -p 3306:3306 mysql
+
+mysql-in:
+  docker exec -it my-mysql bash -c "mysql -h localhost -u testuser -p"
