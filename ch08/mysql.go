@@ -17,6 +17,7 @@ type Repo struct {
 
 func mysql() {
 	MyDb = connectDB()
+	executeDDL()
 }
 
 func connectDB() *sql.DB {
@@ -41,4 +42,14 @@ func open(path string, count uint) *sql.DB {
 
 	fmt.Println("mysql: db connected!!")
 	return MyDb
+}
+
+func executeDDL() {
+
+	defer MyDb.Close()
+
+	_, _ = MyDb.Exec(`create table if not exists book(isbn varchar(14), title varchar(200), price int, primary key(isbn))`)
+
+	// _, _ = MyDb.Exec(`drop table if exists book`)
+
 }
