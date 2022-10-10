@@ -21,7 +21,7 @@ func mysql() {
 
 func connectDB() *sql.DB {
 	path := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s?charset=utf8&parseTime=true",
-		"root", "pass", "testdb")
+		"testuser", "pass", "testdb")
 
 	return open(path, 100)
 }
