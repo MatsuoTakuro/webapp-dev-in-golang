@@ -5,7 +5,7 @@ import (
 	"webapp-dev-in-golang/ch03"
 )
 
-func postgres() {
+func connectToPostgres() {
 	ch03.ConnectToPgx()
 	createAuthorsTable()
 	createBooksTable()

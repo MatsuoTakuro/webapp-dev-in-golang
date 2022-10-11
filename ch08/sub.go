@@ -7,18 +7,19 @@ import (
 	"fmt"
 	"log"
 	"webapp-dev-in-golang/ch03"
+
+	"github.com/go-sql-driver/mysql"
 )
 
-func init() {
-	postgres()
-	mysql()
-}
+// func init() {
+// 	connectToPostgres()
+// 	connectToMySQL()
+// }
 
 func Sub() {
-	defer ch03.PgDb.Close()
-	defer MyDb.Close()
 	// list_8_3()
 	// list_8_6()
+	list_8_9()
 }
 
 type AuthorID string
@@ -128,4 +129,36 @@ func GetAuthorName2(ctx context.Context, title string) (string, error) {
 		}
 	}
 	return b.Name(), nil
+}
+
+const MySQLDuplicateEntryErrorCode uint16 = 1062
+
+var errAlreadyExists = errors.New("deplicate entry")
+
+func list_8_9() {
+	r := NewRepo()
+	b := &Book{
+		ID:    "0000001",
+		Title: "webapp development in golang",
+		Author: Author{
+			AuthorID: "0001",
+			name:     "Shinizu-san",
+		},
+	}
+	err := r.SaveBook(context.Background(), b)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (r *Repo) SaveBook(ctx context.Context, book *Book) error {
+	_, err := r.db.ExecContext(ctx, "INSERT INTO books(id, title, author_id) VALUE(?, ?, ?)", book.ID, book.Title, book.AuthorID)
+	if err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr); mysqlErr.Number == MySQLDuplicateEntryErrorCode {
+			return fmt.Errorf("store: cannot save book_id %s: %w", book.ID, errAlreadyExists)
+		}
+		return fmt.Errorf("SaveBook: %w", err)
+	}
+	return nil
 }
