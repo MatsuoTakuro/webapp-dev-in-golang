@@ -1,9 +1,27 @@
 package ch09
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 func Sub() {
-	list_9_1()
+	// list_9_1()
+	list_9_3()
+	// i: 5
+	// i: 5
+	// i: 5
+	// i: 5
+	// i: 5
+	// j: 4
+	// j: 0
+	// j: 1
+	// j: 2
+	// j: 3
+	// k: 4
+	// k: 0
+	// k: 1
+	// k: 2
 }
 
 func list_9_1() {
@@ -21,4 +39,35 @@ func store() func(int) int {
 		x += n
 		return x
 	}
+}
+
+func list_9_3() {
+	var wg sync.WaitGroup
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			fmt.Printf("i: %d\n", i)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+
+	for j := 0; j < 5; j++ {
+		wg.Add(1)
+		go func(j int) {
+			fmt.Printf("j: %d\n", j)
+			wg.Done()
+		}(j)
+	}
+	wg.Wait()
+
+	for k := 0; k < 5; k++ {
+		k := k
+		wg.Add(1)
+		go func() {
+			fmt.Printf("k: %d\n", k)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 }
