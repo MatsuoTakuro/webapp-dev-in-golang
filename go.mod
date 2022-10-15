@@ -5,6 +5,7 @@ go 1.18
 require github.com/jackc/pgx/v4 v4.17.2
 
 require (
+	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/caarlos0/env/v6 v6.10.1 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect

@@ -3,14 +3,11 @@ package ch09
 import (
 	"fmt"
 	"sync"
-
-	"github.com/caarlos0/env/v6"
 )
 
 func Sub() {
 	// list_9_1()
 	// list_9_3()
-	list_9_4()
 }
 
 func list_9_1() {
@@ -73,22 +70,4 @@ func list_9_3() {
 	// k: 0
 	// k: 1
 	// k: 2
-}
-
-type Config struct {
-	Env  string `env:"TODO_ENV" envDefault:"dev"`
-	Port int    `env:"PORT" envDefault:"80"`
-}
-
-func New() (*Config, error) {
-	cfg := &Config{}
-	if err := env.Parse(cfg); err != nil {
-		return nil, err
-	}
-	return cfg, nil
-}
-
-func list_9_4() {
-	cfg, _ := New()
-	fmt.Println(cfg)
 }
